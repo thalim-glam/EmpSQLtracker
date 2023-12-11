@@ -14,7 +14,7 @@ const db = mysql.createConnection(
 );
 function startApp(){
 const title = logo({
-  name: "empTracker"
+  name: "employeeTracker"
 }).render()
 console.log(title);
 inquirer.prompt([
@@ -54,5 +54,33 @@ inquirer.prompt([
   }
 })
 }
-
+function viewDept(){
+  db.query("SELECT id AS department_id, name AS department_name FROM department;", function(err,res){
+    err ? console.log(err) : console.table(res), startApp();
+  })
+}
+function viewRole(){
+  db.query("SELECT role.id AS role_id, role.title AS job_title, role.salary, department.name AS department_name FROM role JOIN department ON role.department_id;", function(err,res){
+    err ? console.log(err) : console.table(res), startApp();
+  })
+}
+function viewEmp(){
+  db.query("SELECT e.id AS employee_id, e.first_name, e.last_name, r.title AS job_title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager_name FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON r.department_id = d.id LEFT JOIN employee m ON e.manager_id = m.id;", function(err,res){
+    err ? console.log(err) : console.table(res), startApp();
+  })
+}
+function addDept(){
+  inquirer.prompt([
+    {
+      type: "input",
+      name: "add_department",
+      message: "What dept you want to add"
+    }
+  ]).then((userChoice) => {
+    let departmentName = userChoice.add_department
+    db.query("INSERT INTO department(name) VALUES (?)", [departmentName], function(err,res){
+      err ? console.log(err) : console.table(res), viewDept();
+    })
+  })
+}
 startApp()
