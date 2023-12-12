@@ -21,35 +21,35 @@ function startApp() {
     {
       type: "list",
       name: "menu",
-      message: " What do first:",
-      choices: ["View all dept", "View all roles", "View all emp", "Add a dept", "Add a role", "Add an emp", "Update an emp", "Quit"],
+      message: " What information you want to see from the database? ",
+      choices: ["View all departments", "View all roles", "View all employees", "Add a new department", "Add a new role", "Add an employee", "Update an employee role", "Restart"],
     }
   ]).then((userChoice) => {
-    console.log(" User Choose " + userChoice.menu)
+    console.log(" User Choose " + userChoice.menu + "!")
     switch (userChoice.menu) {
-      case "View all dept":
+      case "View all departments":
         viewDept();
         break;
       case "View all roles":
         viewRole();
         break;
-      case "View all emp":
+      case "View all employees":
         viewEmp();
         break;
-      case "Add a dept":
+      case "Add a new department":
         addDept();
         break;
-      case "Add a role":
+      case "Add a new role":
         addRole();
         break;
-      case "Add an emp":
+      case "Add an employee":
         addEmp();
         break;
-      case "Update an emp":
-        updateEmp();
+      case "Update an employee role":
+        updateEmpRole();
         break;
-      case "Quit":
-        quit();
+      case "Restart":
+        startApp();
         break;
     }
   })
@@ -78,7 +78,7 @@ function addDept() {
     {
       type: "input",
       name: "add_department",
-      message: "What dept you want to add?"
+      message: "What department you want to add?"
     }
   ]).then((userChoice) => {
     let departmentName = userChoice.add_department
@@ -98,7 +98,8 @@ function addRole() {
       value: department.id,
       name: department.dept_name,
     }));
-    inquirer.prompt([
+
+   return inquirer.prompt([
       {
         type: "input",
         name: "addingRole",
@@ -112,14 +113,14 @@ function addRole() {
       {
         type: "list",
         name: "deptId",
-        message: "witch department does this belong to?",
+        message: "Which department does this belong to?",
         choices: departmentChoices,
       },
     ])
       .then((userChoice) => {
-        console.log("Role added:  " + userChoice.addARole);
+        console.log("Role added:  " + userChoice.addingRole);
         let departmentId = userChoice.deptId;
-        let roleName = userChoice.addARole;
+        let roleName = userChoice.addingRole;
         let roleSalary = userChoice.salary;
         db.query(
           `INSERT INTO role (title, salary, department_id) 
@@ -179,4 +180,56 @@ function addEmp() {
     });
   });
 }
+
+//---------------------------------------UPDATE AN EMPLOYEE ROLE ---------------------------------
+
+function updateEmpRole() {
+  db.query("SELECT * FROM employee", function (err, res) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    empList = res.map((employee) => ({
+      name: employee.first_name.concat(" ", employee.last_name),
+      value: employee.id,
+    })
+    );
+
+    db.query("SELECT * FROM role", function (err, res) {
+      roleList = res.map((role) => ({
+        value: role.id,
+        name: role.title,
+      })
+      );
+
+      return inquirer.prompt([
+        {
+          type: "list",
+          name: "employee",
+          message: "Which role of an employee you want to change?",
+          choices: empList,
+        },
+        {
+          type: "list",
+          name: "role",
+          message: "Which role this employee is going to have?",
+          choices: roleList,
+        },
+        {
+          type: "list",
+          name: "manager",
+          message: "Who wiil be the manager of this employee?",
+          choices: empList,
+        }
+      ]).then((userChoice) => {
+        const sql2 = `UPDATE employee SET role_id=${userChoice.role}, manager_id=${userChoice.manager} WHERE id=${userChoice.employee};`
+        db.query(sql2, function (err, res) {
+          err ? console.log(err) : console.table(res), viewEmp();
+        })
+        console.log(" An Employee information is being updated! ");
+      });
+    });
+  });
+}
+
 startApp()
