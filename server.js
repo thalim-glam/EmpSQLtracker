@@ -1,11 +1,12 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
 const logo = require("asciiart-logo");
-require("console.table")
+require("console.table");
 
 const db = mysql.createConnection(
   {
     host: "localhost",
+    port: 3306,
     user: "root",
     password: "root",
     database: "thcompany_db",
@@ -22,7 +23,7 @@ function startApp() {
       type: "list",
       name: "menu",
       message: " What information you want to see from the database? ",
-      choices: ["View all departments", "View all roles", "View all employees", "Add a new department", "Add a new role", "Add an employee", "Update an employee role", "Restart"],
+      choices: ["View all departments", "View all roles", "View all employees", "Add a new department", "Add a new role", "Add an employee", "Update an employee role", "BONUS- View emp by dept", "Restart"],
     }
   ]).then((userChoice) => {
     console.log(" User Choose " + userChoice.menu + "!")
@@ -47,6 +48,9 @@ function startApp() {
         break;
       case "Update an employee role":
         updateEmpRole();
+        break;
+      case "BONUS- View emp by dept":
+        viewEmpbyD();
         break;
       case "Restart":
         startApp();
@@ -99,7 +103,7 @@ function addRole() {
       name: department.dept_name,
     }));
 
-   return inquirer.prompt([
+    return inquirer.prompt([
       {
         type: "input",
         name: "addingRole",
@@ -180,7 +184,6 @@ function addEmp() {
     });
   });
 }
-
 //---------------------------------------UPDATE AN EMPLOYEE ROLE ---------------------------------
 
 function updateEmpRole() {
@@ -199,8 +202,7 @@ function updateEmpRole() {
       roleList = res.map((role) => ({
         value: role.id,
         name: role.title,
-      })
-      );
+      }));
 
       return inquirer.prompt([
         {
@@ -231,5 +233,36 @@ function updateEmpRole() {
     });
   });
 }
+//---------------------------------------VIEW EMP BY DEPT ---------------------------------
+
+function viewEmpbyD() {
+  console.log(" BONUS: View employees by Department ");
+  db.query("SELECT e.first_name, e.last_name, department.name AS department FROM employee e LEFT JOIN role ON e.role_id = role.id LEFT JOIN department ON role.department_id = department.id;", function (err, res) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    const deptChioce = res.map((department) => ({
+      name: department.name,
+      value: department.id
+    }));
+    return inquirer.prompt([
+      {
+        type: "list",
+        name: "deptName",
+        message: "Which department you want to see?",
+        choices: deptChioce,
+      }
+    ]).then((userChoice) => {
+      const sql1 = `SELECT e.id, e.first_name, e.last_name, r.title AS role, d.name AS department FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON d.id = r.department_id WHERE id=${userChoice.deptId};`
+      db.query(sql1, function (err, res) {
+        err ? console.log(err) : console.table(res), viewEmp();
+      })
+      console.log(" View employees by Department.");
+    });
+  
+  });
+}
+
 
 startApp()
