@@ -2,8 +2,6 @@
 INSERT INTO department (name)
 VALUES ("Human Resource"),
        ("Management"),
-       ("Accounting"),
-       ("Customer Care"),
        ("Sales"),
        ("Front Desk");
 
@@ -19,10 +17,10 @@ VALUES ("Manager", 70000, 2),
 -- Employees Tables
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Kamala", "Harris", 1, NULL),
-       ("Donald", "Duck", 2, 1),
-       ("Amalia", "Amman", 3, NULL),
+       ("Mayson", "Truff", 2, 1),
+       ("Tylor", "Swift", 3, 1),
        ("Victor", "Zaiden", 2, NULL),
-       ("Benjamin", "Mulan", 3, 2),
+       ("Benjamin", "Huff", 3, 2),
        ("David", "Copperfield", 2, NULL),
-       ("Weldy", "Joshia", 4, NULL),
+       ("Weldy", "Josephin", 4, 2),
        ("Ratan", "Tataa", 4, NULL);

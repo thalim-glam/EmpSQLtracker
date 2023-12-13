@@ -23,7 +23,7 @@ function startApp() {
       type: "list",
       name: "menu",
       message: " What information you want to see from the database? ",
-      choices: ["View all departments", "View all roles", "View all employees", "Add a new department", "Add a new role", "Add an employee", "Remove a department", "Remove an employee", "Update an employee role", "BONUS- View emp by dept", "Restart"],
+      choices: ["View all departments", "View all roles", "View all employees", "Add a new department", "Add a new role", "Add an employee", "Remove a department(BONUS)", "Remove an employee(BONUS)", "Remove a Role(BONUS)", "Update an employee role", "BONUS- View emp by dept", "Restart"],
     }
   ]).then((userChoice) => {
     console.log(" User Choose " + userChoice.menu + "!")
@@ -46,11 +46,14 @@ function startApp() {
       case "Add an employee":
         addEmp();
         break;
-      case "Remove a department":
+      case "Remove a department(BONUS)":
         removeDept();
         break;
-      case "Remove an employee":
+      case "Remove an employee(BONUS)":
         removeEmp();
+        break;
+      case "Remove a Role(BONUS)":
+        removeRole();
         break;
       case "Update an employee role":
         updateEmpRole();
@@ -335,5 +338,8 @@ function removeEmp() {
   })
 }
 //---------------------------------------DELETE AN EMPLOYEE ROLE ----------------------------------------
+function removeRole() {
+
+}
 
 startApp()
