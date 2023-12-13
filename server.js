@@ -252,7 +252,8 @@ function updateEmpRole() {
 
 function viewEmpbyD() {
   console.log("BONUS: View employees by Department ");
-  db.query("SELECT e.id AS employee_id, e.first_name, e.last_name, r.title AS job_title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager_name FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON r.department_id = d.id LEFT JOIN employee m ON e.manager_id = m.id;", function (err, res) {
+
+  db.query("SELECT d.name AS department, e.id AS employee_id, e.first_name, e.last_name, r.title AS job_title, r.salary FROM employee e INNER JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id ORDER BY d.name ASC;", function (err, res) {
     if (err) {
       console.log(err);
       return;
@@ -282,7 +283,7 @@ function viewEmpbyD() {
 //---------------------------------------VIEW EMP BY MANAGER --------------------------------------------
 function viewEmpbyM() {
   db.query("SELECT e.id AS employee_id, CONCAT(e.first_name, ' ', e.last_name) AS employee_name, r.title AS job_title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager_name FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON r.department_id = d.id LEFT JOIN employee m ON e.manager_id = m.id ORDER BY manager_name;", function (err, res) {
-    err ? console.log(err) : console.table(res), startApp();
+    err ? console.log(err) : console.table(res);
   })
 }
 //---------------------------------------UPDATE EMPLOYEE'S MANAGER --------------------------------------
@@ -388,7 +389,7 @@ function removeEmp() {
       db.query(sql, { id: res.employee }, (err, res) => {
         console.log(" Delete employee from database...");
         console.log(" ");
-        err ? console.log(err) : console.table(res), viewEmpbyD();
+        err ? console.log(err) : console.table(res);
       })
     })
   })
@@ -418,7 +419,7 @@ function removeRole() {
       db.query(sql, { id: res.roles }, (err, res) => {
         console.log(" Deleting employee role from database...");
         console.log(" ");
-        err ? console.log(err) : console.table(res), viewRole();
+        err ? console.log(err) : console.table(res);
       })
     })
   })
