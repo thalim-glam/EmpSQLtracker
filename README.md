@@ -53,13 +53,8 @@ THEN I am prompted to select an employee to update and their new role and this i
 
 ## User Instruction
 
-  - Click here for the repository: https://github.com/thalim-glam/Express_noteTaker 
-  - Click here for Readme file: https://thalim-glam.github.io/Express_noteTaker/
-  - Click here for the Heroku-deployed link : https://ucbth-ch11-d97ba2745641.herokuapp.com/ 
-  - When the Note Taker page loads, click on the "Get started".
-  - Enter text into the "Title" and "Text" fields and click "Save Note".
-  - To access previous notes, click on the saved notes on the left.
-  - To clear form click the "Clear Form" button.
+  - Click here for the repository: https://github.com/thalim-glam/EmpSQLtracker 
+  - Click here for Readme file: https://github.com/thalim-glam/EmpSQLtracker/blob/main/README.md
   - Here is a sample screenshots of my application :
     - Walkthrough Video link: https://drive.google.com/file/d/1nA77FflJy1JEgvdCwOdFIknbdtt6UufC/view
     - Initial Page ![Screenshot of Initial Page](./public/images/initial_page.png)
