@@ -23,7 +23,7 @@ function startApp() {
       type: "list",
       name: "menu",
       message: " What information you want to see from the database? ",
-      choices: ["View all departments", "View all roles", "View all employees", "Add a new department", "Add a new role", "Add an employee", "Remove a department(BONUS)", "Remove an employee(BONUS)", "Remove a Role(BONUS)", "Update an employee role", "BONUS- View emp by dept", "Restart"],
+      choices: ["View all departments", "View all roles", "View all employees", "Add a new department", "Add a new role", "Add an employee", "Remove a department(BONUS)", "Remove an employee(BONUS)", "Remove a Role(BONUS)", "Update an employee role", "BONUS- Update an employee's manager", "BONUS- View emp by dept", "BONUS- View all employees by manager", "Restart"],
     }
   ]).then((userChoice) => {
     console.log(" User Choose " + userChoice.menu + "!")
@@ -58,34 +58,40 @@ function startApp() {
       case "Update an employee role":
         updateEmpRole();
         break;
+        case "BONUS- Update an employee's manager":
+          updateEmpManager();
+          break;
       case "BONUS- View emp by dept":
         viewEmpbyD();
         break;
+        case "BONUS- View all employees by manager":
+          viewEmpbyM();
+          break;
       case "Restart":
         startApp();
         break;
     }
   })
 }
-//--------------------------------------- VIEW DEPARTMENT ---------------------------------
+//--------------------------------------- VIEW ALL DEPARTMENT ---------------------------------
 function viewDept() {
   db.query("SELECT id AS department_id, name AS department_name FROM department;", function (err, res) {
     err ? console.log(err) : console.table(res), startApp();
   })
 }
-//--------------------------------------- VIEW ROLE ---------------------------------
+//--------------------------------------- VIEW ALL ROLE -----------------------------------------------
 function viewRole() {
-  db.query("SELECT role.id AS role_id, role.title AS job_title, role.salary, department.name AS department_name FROM role JOIN department ON role.department_id;", function (err, res) {
+  db.query("SELECT role.id AS role_id, department.name AS department_name, role.title AS job_title, role.salary FROM role JOIN department ON role.department_id ORDER BY department_name;", function (err, res) {
     err ? console.log(err) : console.table(res), startApp();
   })
 }
-//--------------------------------------- VIEW EMPLOYEE ---------------------------------
+//--------------------------------------- VIEW ALL EMPLOYEE -------------------------------------------
 function viewEmp() {
-  db.query("SELECT e.id AS employee_id, e.first_name, e.last_name, r.title AS job_title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager_name FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON r.department_id = d.id LEFT JOIN employee m ON e.manager_id = m.id;", function (err, res) {
+  db.query("SELECT e.id AS employee_id, e.first_name, e.last_name, r.title AS job_title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager_name FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON r.department_id = d.id LEFT JOIN employee m ON e.manager_id = m.id ORDER BY employee_id;", function (err, res) {
     err ? console.log(err) : console.table(res), startApp();
   })
 }
-//---------------------------------------ADDING DEPARTMENT ---------------------------------
+//---------------------------------------ADDING A DEPARTMENT ---------------------------------
 function addDept() {
   inquirer.prompt([
     {
@@ -100,7 +106,7 @@ function addDept() {
     })
   })
 }
-//---------------------------------------ADDING ROLE ---------------------------------
+//---------------------------------------ADDING A ROLE ---------------------------------
 function addRole() {
   db.query("SELECT * FROM department", function (err, res) {
     if (err) {
@@ -144,7 +150,7 @@ function addRole() {
       });
   });
 }
-//---------------------------------------ADDING EMPLOYEE ---------------------------------
+//---------------------------------------ADDING AN EMPLOYEE ---------------------------------
 function addEmp() {
   db.query("SELECT * FROM employee", function (err, res) {
     if (err) {
@@ -274,9 +280,59 @@ function viewEmpbyD() {
   });
 }
 //---------------------------------------VIEW EMP BY MANAGER --------------------------------------------
-
+function viewEmpbyM() {
+  db.query("SELECT e.id AS employee_id, CONCAT(e.first_name, ' ', e.last_name) AS employee_name, r.title AS job_title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager_name FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON r.department_id = d.id LEFT JOIN employee m ON e.manager_id = m.id ORDER BY manager_name;", function (err, res) {
+    err ? console.log(err) : console.table(res), startApp();
+  })
+}
 //---------------------------------------UPDATE EMPLOYEE'S MANAGER --------------------------------------
+function updateEmpManager() {
+  db.query("SELECT * FROM employee", function (err, res) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    empList = res.map((employee) => ({
+      name: employee.first_name.concat(" ", employee.last_name),
+      value: employee.id,
+    })
+    );
 
+    db.query("SELECT * FROM role", function (err, res) {
+      roleList = res.map((role) => ({
+        value: role.id,
+        name: role.title,
+      }));
+
+      return inquirer.prompt([
+        {
+          type: "list",
+          name: "employee",
+          message: "Who is the employee?",
+          choices: empList,
+        },
+        {
+          type: "list",
+          name: "role",
+          message: "What is the role of the employee?",
+          choices: roleList,
+        },
+        {
+          type: "list",
+          name: "manager",
+          message: "Who is going to be the new manager?",
+          choices: empList,
+        }
+      ]).then((userChoice) => {
+        const sql2 = `UPDATE employee SET role_id=${userChoice.role}, manager_id=${userChoice.manager} WHERE id=${userChoice.employee};`
+        db.query(sql2, function (err, res) {
+          err ? console.log(err) : console.table(res), viewEmp();
+        })
+        console.log(" An Employee information is being updated! ");
+      });
+    });
+  });
+}
 //---------------------------------------DELETE A DEPARTMENT --------------------------------------------
 function removeDept() {
   const sql1 = `SELECT department.id, department.name FROM department;`
@@ -302,7 +358,7 @@ function removeDept() {
       db.query(sql, { id: res.dept }, (err, res) => {
         console.log(" Delete department from database...");
         console.log(" ");
-        err ? console.log(err) : console.table(res), startApp();
+        err ? console.log(err) : console.table(res), viewDept();
       })
     })
   })
@@ -332,14 +388,40 @@ function removeEmp() {
       db.query(sql, { id: res.employee }, (err, res) => {
         console.log(" Delete employee from database...");
         console.log(" ");
-        err ? console.log(err) : console.table(res), startApp();
+        err ? console.log(err) : console.table(res), viewEmpbyD();
       })
     })
   })
 }
 //---------------------------------------DELETE AN EMPLOYEE ROLE ----------------------------------------
 function removeRole() {
-
+  const sql1 = `SELECT role.id, role.title FROM role;`
+  db.query(sql1, (err, res) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    const roles = res.map(({ id, title }) => ({
+      value: id,
+      name: `${id} ${title}`
+    }));
+    console.table(res);
+    return inquirer.prompt([
+      {
+        type: "list",
+        name: "roles",
+        message: "Which Role you want to delete from database?",
+        choices: roles
+      }
+    ]).then((res) => {
+      const sql = `DELETE FROM role WHERE ?`;
+      db.query(sql, { id: res.roles }, (err, res) => {
+        console.log(" Deleting employee role from database...");
+        console.log(" ");
+        err ? console.log(err) : console.table(res), viewRole();
+      })
+    })
+  })
 }
 
 startApp()

@@ -8,9 +8,9 @@ VALUES ("Human Resource"),
 -- Roles Tables
 INSERT INTO role (title, salary, department_id)
 VALUES ("Manager", 70000, 2),
-       ("Assistant Manager", 50000, 1),
-       ("Accountant", 40000, 3),
-       ("Salesman", 25000, 4),
+       ("Assistant Manager", 50000, 2),
+       ("Accountant", 40000, 1),
+       ("Salesman", 25000, 3),
        ("HR", 30000, 1),
        ("Intern", 10000, 4);
 
