@@ -11,42 +11,44 @@
   - [Credits](#credits)
   - [License](#license)
   - [Tests](#tests)
-  - [Deploying to Heroku](#deploying-to-heroku)
 
 ## Installation
 
 - Here are the installation process :
-  - [1] Here is the repo for this application https://github.com/thalim-glam/Express_noteTaker 
+  - [1] Here is the repo for this application https://github.com/thalim-glam/EmpSQLtracker 
   - [2] Clone the repository or download the zip folder.
-  - [3] Open the source code in your code editor.
+  - [3] Open the source code in your code editor (for example VSCode).
   - [4] Open the integrated terminal or git bash to test the application.
   - [5] Please refer to [Tests](#tests) section for further information regarding testing.
 
 ## Required Task 
 
-- The frontend is included in the starter code
-- Student HW is to build the back end, connect the two, and then deploy the entire application to Heroku.
-- User Story 
+##### User Story 
 ```
-  AS A small business owner
-  I WANT to be able to write and save notes
-  SO THAT I can organize my thoughts and keep track of tasks I need to complete
+AS A business owner
+I WANT to be able to view and manage the departments, roles, and employees in my company
+SO THAT I can organize and plan my business
 ```
-- Acceptance criteria
+##### Acceptance criteria
 ```
-  GIVEN a note-taking application
-  WHEN I open the Note Taker
-  THEN I am presented with a landing page with a link to a notes page
-  WHEN I click on the link to the notes page
-  THEN I am presented with a page with existing notes listed in the left-hand column, plus empty fields to enter a new note title and the note’s text in the right-hand column
-  WHEN I enter a new note title and the note’s text
-  THEN a "Save Note" button and a "Clear Form" button appear in the navigation at the top of the page
-  WHEN I click on the Save button
-  THEN the new note I have entered is saved and appears in the left-hand column with the other existing notes and the buttons in the navigation disappear
-  WHEN I click on an existing note in the list in the left-hand column
-  THEN that note appears in the right-hand column and a "New Note" button appears in the navigation
-  WHEN I click on the "New Note" button in the navigation at the top of the page
-  THEN I am presented with empty fields to enter a new note title and the note’s text in the right-hand column and the button disappears
+  GIVEN a command-line application that accepts user input
+WHEN I start the application
+THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
+WHEN I choose to view all departments
+THEN I am presented with a formatted table showing department names and department ids
+WHEN I choose to view all roles
+THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
+WHEN I choose to view all employees
+THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
+WHEN I choose to add a department
+THEN I am prompted to enter the name of the department and that department is added to the database
+WHEN I choose to add a role
+THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
+WHEN I choose to add an employee
+THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+WHEN I choose to update an employee role
+THEN I am prompted to select an employee to update and their new role and this information is updated in the database
+
 ```
 
 ## User Instruction
@@ -85,7 +87,7 @@ Apart from me :D the credit also goes to my Instructor, TAs, Tutor, Classmates, 
 - Google (my best buddy)
 - Geeks for Geeks
 - Stack Overflow
-- MDN web doc
+- MySQL documentatiion
 - Class Recordings
 - Tutorials Teacher
 
@@ -95,26 +97,10 @@ Apart from me :D the credit also goes to my Instructor, TAs, Tutor, Classmates, 
 ## Tests
 
 To test this application please type, 
-  - npm i [To install node modules ]
-  - npm i express [To install express ]
+  - npm i [To install node modules if not there]
+  - make sure the dependecies inside package.json have ("dotenv": "^8.2.0", "console.table": "^0.10.0", "inquirer": "^8.2.4", "asciiart-logo": "^0.2.6", "mysql2": "^3.1.0").
   - npm run start [ To start the server ]
-  - Open web browser and type http://localhost:3001
-  - You can also use Innsomnia/postman to test the application
-  - Click here for deployed Heroku link : https://ucbth-ch11-d97ba2745641.herokuapp.com/
-
-## Deploying to Heroku
-:) This is suggested in the Heroku website.
-:) Therefore using it for testing purpose.
-:) Please feel free to click the button below 
-
-```
-$ heroku create
-$ git push heroku main
-$ heroku open
-```
-or
-
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+  - For more information please refer to the walkthrough video.
 
 ### Done By: Tasneem Halim 😎
 
