@@ -23,7 +23,7 @@ function startApp() {
       type: "list",
       name: "menu",
       message: " What information you want to see from the database? ",
-      choices: ["View all departments", "View all roles", "View all employees", "Add a new department", "Add a new role", "Add an employee", "Update an employee role", "BONUS- View emp by dept", "Restart"],
+      choices: ["View all departments", "View all roles", "View all employees", "Add a new department", "Add a new role", "Add an employee", "Remove an employee", "Update an employee role", "BONUS- View emp by dept", "Restart"],
     }
   ]).then((userChoice) => {
     console.log(" User Choose " + userChoice.menu + "!")
@@ -45,6 +45,9 @@ function startApp() {
         break;
       case "Add an employee":
         addEmp();
+        break;
+      case "Remove an employee":
+        removeEmp();
         break;
       case "Update an employee role":
         updateEmpRole();
@@ -250,12 +253,12 @@ function viewEmpbyD() {
     return inquirer.prompt([
       {
         type: "list",
-        name: "deptId",
+        name: "deptName",
         message: "Which department you want to see?",
         choices: deptChoice,
       }
     ]).then((userChoice) => {
-      const sql1 = `SELECT e.id, e.first_name, e.last_name, r.title AS role, d.name AS department FROM employee e LEFT JOIN role r ON e.role_id = r.id LEFT JOIN department d ON d.id = r.department_id WHERE e.id=${userChoice.deptId};`
+      const sql1 = `SELECT e.id, e.first_name, e.last_name, r.title AS role, d.name AS department FROM employee e LEFT JOIN role r ON e.role_id = r.id LEFT JOIN department d ON d.id = r.department_id WHERE e.id=${userChoice.deptName};`
       db.query(sql1, function (err, res) {
         console.log(" View employees by Department...");
         console.log(" ");
@@ -271,7 +274,36 @@ function viewEmpbyD() {
 //---------------------------------------DELETE A DEPARTMENT --------------------------------------------
 
 //---------------------------------------DELETE AN EMPLOYEE ---------------------------------------------
+function removeEmp() {
+  const sql1 = `SELECT employee.id, employee.first_name, employee.last_name FROM employee;`
+  db.query(sql1, (err, res) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    const employee = res.map(({ id, first_name, last_name }) => ({
+      value: id,
+      name: `${id} ${first_name} ${last_name}`
+    }));
+    console.table(res);
+    return inquirer.prompt([
+      {
+        type: "list",
+        name: "employee",
+        message: "Delete this Employee",
+        choices: employee
+      }
+    ]).then((res) => {
+      const sql = `DELETE FROM employee WHERE ?`;
+      db.query(sql, { id: res.employee }, (err, res) => {
+        console.log(" Delete employee from database...");
+        console.log(" ");
+        err ? console.log(err) : console.table(res), startApp();
+      })
+    })
+  })
 
+}
 //---------------------------------------DELETE AN EMPLOYEE ROLE ----------------------------------------
 
 startApp()
