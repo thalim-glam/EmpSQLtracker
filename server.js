@@ -233,36 +233,45 @@ function updateEmpRole() {
     });
   });
 }
-//---------------------------------------VIEW EMP BY DEPT ---------------------------------
+//---------------------------------------VIEW EMP BY DEPARTMENT ---------------------------------
 
 function viewEmpbyD() {
-  console.log(" BONUS: View employees by Department ");
-  db.query("SELECT e.first_name, e.last_name, department.name AS department FROM employee e LEFT JOIN role ON e.role_id = role.id LEFT JOIN department ON role.department_id = department.id;", function (err, res) {
+  console.log("BONUS: View employees by Department ");
+  db.query("SELECT e.id AS employee_id, e.first_name, e.last_name, r.title AS job_title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager_name FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON r.department_id = d.id LEFT JOIN employee m ON e.manager_id = m.id;", function (err, res) {
     if (err) {
       console.log(err);
       return;
     }
-    const deptChioce = res.map((department) => ({
-      name: department.name,
-      value: department.id
+
+    const deptChoice = res.map((employee) => ({
+      value: employee.employee_id,
+      name: employee.department,
     }));
     return inquirer.prompt([
       {
         type: "list",
-        name: "deptName",
+        name: "deptId",
         message: "Which department you want to see?",
-        choices: deptChioce,
+        choices: deptChoice,
       }
     ]).then((userChoice) => {
-      const sql1 = `SELECT e.id, e.first_name, e.last_name, r.title AS role, d.name AS department FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON d.id = r.department_id WHERE id=${userChoice.deptId};`
+      const sql1 = `SELECT e.id, e.first_name, e.last_name, r.title AS role, d.name AS department FROM employee e LEFT JOIN role r ON e.role_id = r.id LEFT JOIN department d ON d.id = r.department_id WHERE e.id=${userChoice.deptId};`
       db.query(sql1, function (err, res) {
-        err ? console.log(err) : console.table(res), viewEmp();
+        console.log(" View employees by Department...");
+        console.log(" ");
+        err ? console.log(err) : console.table(res), startApp();
       })
-      console.log(" View employees by Department.");
     });
-  
   });
 }
+//---------------------------------------VIEW EMP BY MANAGER --------------------------------------------
 
+//---------------------------------------UPDATE EMPLOYEE'S MANAGER --------------------------------------
+
+//---------------------------------------DELETE A DEPARTMENT --------------------------------------------
+
+//---------------------------------------DELETE AN EMPLOYEE ---------------------------------------------
+
+//---------------------------------------DELETE AN EMPLOYEE ROLE ----------------------------------------
 
 startApp()
