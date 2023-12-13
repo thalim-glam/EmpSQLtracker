@@ -58,15 +58,15 @@ function startApp() {
       case "Update an employee role":
         updateEmpRole();
         break;
-        case "BONUS- Update an employee's manager":
-          updateEmpManager();
-          break;
+      case "BONUS- Update an employee's manager":
+        updateEmpManager();
+        break;
       case "BONUS- View emp by dept":
         viewEmpbyD();
         break;
-        case "BONUS- View all employees by manager":
-          viewEmpbyM();
-          break;
+      case "BONUS- View all employees by manager":
+        viewEmpbyM();
+        break;
       case "Restart":
         startApp();
         break;
@@ -424,4 +424,4 @@ function removeRole() {
   })
 }
 
-startApp()
+startApp();

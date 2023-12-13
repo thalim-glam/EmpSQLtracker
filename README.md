@@ -1,7 +1,7 @@
 # EmpSQLtracker
 
 ## Description
-- This is a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL.
+- This is a command-line application from scratch to manage a company's employee database (my database name is "thcompany_db"), using command line, Node.js, Inquirer, and MySQL concept.
 
 ## Table of Contents
   - [Installation](#installation)
