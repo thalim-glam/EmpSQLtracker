@@ -56,12 +56,10 @@ THEN I am prompted to select an employee to update and their new role and this i
   - Click here for the repository: https://github.com/thalim-glam/EmpSQLtracker 
   - Click here for Readme file: https://github.com/thalim-glam/EmpSQLtracker/blob/main/README.md
   - Here is a sample screenshots of my application :
-    - Walkthrough Video link: https://drive.google.com/file/d/1nA77FflJy1JEgvdCwOdFIknbdtt6UufC/view
-    - Initial Page ![Screenshot of Initial Page](./public/images/initial_page.png)
-    - Existing notes ![Screenshot of Showing existing notes](./public/images/showing_exiting_note.png)
-    - Saving New note ![Screenshot of Saving new note](./public/images/saving_new_note.png)
-    - Deleting Note (BONUS) ![Screenshot of Deleting previously saved note](./public/images/deleted_note.png)
-
+    - Walkthrough Video link: https://drive.google.com/file/d/16TIQZ6X7lXxOFuqxeeKnn4O24m78-JDt/view 
+    - Video of the application ![Walkthrough Video](./assets/walkthrough.mp4)
+    - Screenshot ![Screenshot](./assets/Screenshot.png)
+    
 ## Command line code
 
 I used the following command lines:
