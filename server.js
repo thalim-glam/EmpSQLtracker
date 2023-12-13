@@ -15,7 +15,7 @@ const db = mysql.createConnection(
 );
 function startApp() {
   const title = logo({
-    name: "employeeTracker"
+    name: "Tasnim's Employee Tracker"
   }).render()
   console.log(title);
   inquirer.prompt([
@@ -23,7 +23,7 @@ function startApp() {
       type: "list",
       name: "menu",
       message: " What information you want to see from the database? ",
-      choices: ["View all departments", "View all roles", "View all employees", "Add a new department", "Add a new role", "Add an employee", "Remove an employee", "Update an employee role", "BONUS- View emp by dept", "Restart"],
+      choices: ["View all departments", "View all roles", "View all employees", "Add a new department", "Add a new role", "Add an employee", "Remove a department", "Remove an employee", "Update an employee role", "BONUS- View emp by dept", "Restart"],
     }
   ]).then((userChoice) => {
     console.log(" User Choose " + userChoice.menu + "!")
@@ -45,6 +45,9 @@ function startApp() {
         break;
       case "Add an employee":
         addEmp();
+        break;
+      case "Remove a department":
+        removeDept();
         break;
       case "Remove an employee":
         removeEmp();
@@ -272,7 +275,35 @@ function viewEmpbyD() {
 //---------------------------------------UPDATE EMPLOYEE'S MANAGER --------------------------------------
 
 //---------------------------------------DELETE A DEPARTMENT --------------------------------------------
-
+function removeDept() {
+  const sql1 = `SELECT department.id, department.name FROM department;`
+  db.query(sql1, (err, res) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    const dept = res.map(({ id, name }) => ({
+      value: id,
+      name: `${id} ${name}`
+    }));
+    console.table(res);
+    return inquirer.prompt([
+      {
+        type: "list",
+        name: "dept",
+        message: "Delete this Department",
+        choices: dept
+      }
+    ]).then((res) => {
+      const sql = `DELETE FROM department WHERE ?`;
+      db.query(sql, { id: res.dept }, (err, res) => {
+        console.log(" Delete department from database...");
+        console.log(" ");
+        err ? console.log(err) : console.table(res), startApp();
+      })
+    })
+  })
+}
 //---------------------------------------DELETE AN EMPLOYEE ---------------------------------------------
 function removeEmp() {
   const sql1 = `SELECT employee.id, employee.first_name, employee.last_name FROM employee;`
@@ -302,7 +333,6 @@ function removeEmp() {
       })
     })
   })
-
 }
 //---------------------------------------DELETE AN EMPLOYEE ROLE ----------------------------------------
 
